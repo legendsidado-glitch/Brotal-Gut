@@ -25,7 +25,6 @@
                         'theme-pastel-brown': '#D7CCC8',
                         'theme-pastel-blue': '#E3F2FD',
                         'theme-deep-blue': '#1976D2',
-                        'gemini-purple': '#8E75FF',
                     },
                     fontFamily: {
                         'serif': ['"Playfair Display"', 'serif'],
@@ -42,80 +41,58 @@
         ::-webkit-scrollbar-track { background: #D7CCC8; }
         ::-webkit-scrollbar-thumb { background: #5D4037; border-radius: 5px; }
 
+        /* Melt & Shatter Loading Screen Effect */
         #loader {
             position: fixed; inset: 0; background-color: #D7CCC8; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
-        }
-        
-        .dough-spinner {
-            width: 80px; height: 80px; border: 8px solid #FFFFFF; border-top: 8px solid #FF9800;
-            border-radius: 50%; animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(93, 64, 55, 0.2);
+            transform-origin: top center;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .fade-out { opacity: 0; pointer-events: none; }
+        .melt-out {
+            animation: meltShatter 1.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+            pointer-events: none;
+        }
 
+        @keyframes meltShatter {
+            0% { transform: scale(1) translateY(0); filter: blur(0) contrast(1); opacity: 1; }
+            20% { transform: scale(1.02) translateY(0) skewX(2deg); filter: blur(2px) contrast(1.2); opacity: 1; }
+            40% { transform: scale(0.95) translateY(10vh) skewX(-5deg) skewY(5deg); filter: blur(5px) contrast(1.5); opacity: 0.9; }
+            70% { transform: scale(0.8) translateY(50vh) skewX(10deg) skewY(-10deg) scaleY(2); filter: blur(15px) contrast(2); opacity: 0.5; }
+            100% { transform: scale(0.5) translateY(120vh) skewX(-20deg) scaleY(4); filter: blur(25px) contrast(3); opacity: 0; display: none; }
+        }
+
+        /* Circular Loading Bar */
+        .loader-svg {
+            animation: rotate 2s linear infinite;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        .loader-circle {
+            stroke: #FF9800;
+            stroke-width: 4;
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+            animation: dash 1.5s ease-in-out infinite;
+            stroke-linecap: round;
+            fill: none;
+        }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        @keyframes dash {
+            0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 90, 200; stroke-dashoffset: -35px; }
+            100% { stroke-dasharray: 90, 200; stroke-dashoffset: -124px; }
+        }
+
+        /* Modals */
         .modal-overlay { opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; backdrop-filter: blur(4px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { transform: scale(0.95) translateY(20px); transition: all 0.3s ease-in-out; }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
 
-        .section-divider {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            overflow: hidden;
-            background: #D7CCC8;
-            margin-top: -2px;
-        }
-
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23E3F2FD" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: 50% 100%;
-            animation: waveMove 10s linear infinite;
-        }
-
-        .wave-delayed {
-            bottom: 10px;
-            opacity: 0.5;
-            animation: waveMove 15s linear infinite reverse;
-        }
-
-        @keyframes waveMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
         .drink-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(25, 118, 210, 0.1), 0 10px 10px -5px rgba(25, 118, 210, 0.04);
-        }
-
-        /* AI Features Styles */
-        .ai-glow {
-            box-shadow: 0 0 15px rgba(142, 117, 255, 0.4);
-            transition: all 0.3s ease;
-        }
-        .ai-glow:hover {
-            box-shadow: 0 0 25px rgba(142, 117, 255, 0.6);
-        }
-        #ai-chat-window {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            transform: translateY(20px) scale(0.95);
-            pointer-events: none;
-            opacity: 0;
-        }
-        #ai-chat-window.active {
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-            opacity: 1;
         }
     </style>
 </head>
@@ -123,7 +100,9 @@
 
     <!-- Loading Screen -->
     <div id="loader">
-        <div class="dough-spinner"></div>
+        <svg class="loader-svg" viewBox="25 25 50 50">
+            <circle class="loader-circle" cx="50" cy="50" r="20"></circle>
+        </svg>
         <h2 class="text-3xl font-serif text-theme-brown font-bold tracking-wide">Brotal Gut</h2>
         <p class="text-theme-brown font-sans mt-2 animate-pulse">Knete den Teig...</p>
     </div>
@@ -181,14 +160,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid"></div>
     </section>
 
-    <!-- Transition Section -->
-    <div class="section-divider">
-        <div class="wave"></div>
-        <div class="wave wave-delayed"></div>
-    </div>
+    <!-- Smooth Gradient Transition -->
+    <div class="h-64 w-full bg-gradient-to-b from-theme-pastel-brown to-theme-pastel-blue"></div>
 
     <!-- Drinks Section -->
-    <section id="drinks-section" class="bg-theme-pastel-blue py-24 px-6">
+    <section id="drinks-section" class="bg-theme-pastel-blue pb-24 pt-12 px-6">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-serif text-theme-deep-blue mb-2 text-center">Erfrischungen & Heißgetränke</h2>
             <div class="w-24 h-1 bg-theme-deep-blue mx-auto mb-12 rounded-full"></div>
@@ -196,35 +172,59 @@
         </div>
     </section>
 
-    <!-- AI Chat Floating Button -->
-    <div class="fixed bottom-6 right-6 z-[200]">
-        <button id="toggle-ai-chat" class="w-16 h-16 bg-gemini-purple text-white rounded-full shadow-2xl flex items-center justify-center ai-glow hover:scale-110 transition-transform">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-        </button>
-        <div id="ai-chat-window" class="absolute bottom-20 right-0 w-80 md:w-96 bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-gemini-purple/20">
-            <div class="bg-gemini-purple p-4 text-white">
-                <h3 class="font-serif font-bold">✨ Brot-Berater</h3>
-                <p class="text-xs opacity-80">Frage mich nach dem passenden Brot!</p>
-            </div>
-            <div id="ai-chat-messages" class="h-64 overflow-y-auto p-4 space-y-3 bg-gray-50 text-sm">
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100">Hallo! Ich bin dein Brotal-Gut Assistent. Welches Brot suchst du heute?</div>
-            </div>
-            <div class="p-3 border-t bg-white flex gap-2">
-                <input type="text" id="ai-chat-input" class="flex-1 p-2 rounded-xl bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-gemini-purple" placeholder="Nachricht schreiben...">
-                <button id="ai-chat-send" class="p-2 bg-gemini-purple text-white rounded-xl">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <!-- Footer -->
+    <footer class="bg-theme-brown text-theme-white py-12 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <h2 class="text-3xl font-serif mb-2">Brotal Gut</h2>
+            <p class="text-theme-pastel-orange text-sm mb-6">Gesund, Lecker, Perfekt. 1894</p>
+            
+            <div class="flex flex-col items-center gap-4 mb-8">
+                <button onclick="openModal('about-modal')" class="px-8 py-3 border border-theme-pastel-orange/50 text-theme-pastel-orange rounded-full hover:bg-theme-pastel-orange hover:text-theme-brown transition-all duration-300 font-medium tracking-wide">
+                    Über Uns
                 </button>
+            </div>
+            
+            <div class="text-xs opacity-60 flex flex-col gap-1">
+                <p>Erstellt: April 2026</p>
+                <p>made by: Die Brotale Gruppe</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+
+    <!-- Über Uns Modal (NEW) -->
+    <div id="about-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/80 flex justify-center items-center p-4">
+        <div class="modal-content bg-theme-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-8 md:p-10 relative">
+            <button onclick="closeModal('about-modal')" class="absolute top-4 right-4 text-theme-brown hover:text-theme-orange transition-colors w-10 h-10 flex items-center justify-center rounded-full text-2xl z-10">✕</button>
+            
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-serif text-theme-brown mb-6">Über Uns</h2>
+                <p class="text-theme-brown/80 leading-relaxed text-left text-sm md:text-base">
+                    Hallo und Wilkommen zu der "Brotalen" Website die unsere gruppe zusammen kreirt hat. diese website wurde gemacht, um unsere produkte in einer besseren art und weise zu presentieren. es ist nicht nur da um zu zeigen wie viel mühe wir in dieses projekt reingetan haben, aber mehr um zu zeigen, wie professionel wir versuchen, unser produkt aussehen zu lassen. viel spaß und vielen dank.
+                </p>
+            </div>
+
+            <div class="border-t border-theme-pastel-brown pt-8">
+                <h3 class="text-2xl font-serif text-theme-brown mb-6 text-center">Deine Meinung</h3>
+                <form id="general-feedback-form" onsubmit="submitGeneralFeedback(event)">
+                    <div class="mb-4">
+                        <input type="text" required class="w-full p-4 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="Dein Name">
+                    </div>
+                    <div class="mb-6">
+                        <textarea required rows="4" class="w-full p-4 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="Was denkst du über unsere Website oder Produkte?"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-theme-orange text-theme-white rounded-xl font-medium hover:bg-theme-brown transition-colors">Meinung absenden</button>
+                    
+                    <div id="general-feedback-success" class="hidden mt-4 text-center text-green-600 font-medium bg-green-50 p-3 rounded-xl border border-green-200">
+                        Vielen Dank für deine Rückmeldung!
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-theme-brown text-theme-white py-10 text-center">
-        <h2 class="text-2xl font-serif mb-2">Brotal Gut</h2>
-        <p class="text-theme-pastel-orange text-sm mb-6">Gesund, Lecker, Perfekt. 1894</p>
-    </footer>
-
-    <!-- Modals -->
+    <!-- Product Details Modal -->
     <div id="product-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/60 flex justify-center items-center p-4">
         <div class="modal-content bg-theme-white w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl relative">
             <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-theme-pastel-brown text-theme-brown w-10 h-10 rounded-full flex items-center justify-center z-10">✕</button>
@@ -239,12 +239,7 @@
                         </select>
                         <input type="text" id="feedback-name" required class="p-3 rounded-xl bg-theme-pastel-brown/20" placeholder="Name">
                     </div>
-                    <div class="relative mb-4">
-                        <textarea id="feedback-text" required rows="3" class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 pr-12" placeholder="Deine Meinung..."></textarea>
-                        <button type="button" onclick="improveFeedback()" class="absolute right-3 bottom-3 text-gemini-purple hover:scale-110 transition-transform" title="✨ Text mit KI verbessern">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        </button>
-                    </div>
+                    <textarea id="feedback-text" required rows="3" class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 mb-4" placeholder="Deine Meinung..."></textarea>
                     <button type="submit" class="w-full py-3 bg-theme-orange text-theme-white rounded-xl">Bewertung absenden</button>
                 </form>
                 <div id="reviews-list" class="space-y-4"></div>
@@ -252,6 +247,7 @@
         </div>
     </div>
 
+    <!-- Cart Modal -->
     <div id="cart-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/60 flex justify-end">
         <div class="modal-content bg-theme-white w-full max-w-md h-full rounded-l-3xl shadow-2xl flex flex-col relative">
             <div class="p-6 border-b flex justify-between items-center">
@@ -266,6 +262,7 @@
         </div>
     </div>
 
+    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/80 flex justify-center items-center p-4">
         <div class="modal-content bg-theme-white w-full max-w-md rounded-3xl p-8 relative">
             <button onclick="closeModal('login-modal')" class="absolute top-4 right-4">✕</button>
@@ -280,43 +277,13 @@
     </div>
 
     <script>
-        // --- GEMINI API HELPERS ---
-        const apiKey = "";
-        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
-
-        async function callGemini(prompt, systemInstruction = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
-            let retries = 0;
-            const maxRetries = 5;
-
-            while (retries < maxRetries) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined
-                        })
-                    });
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Entschuldigung, ich konnte keine Antwort generieren.";
-                } catch (error) {
-                    retries++;
-                    const delay = Math.pow(2, retries) * 500;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    if (retries === maxRetries) return "Fehler bei der Verbindung zur KI. Bitte später versuchen.";
-                }
-            }
-        }
-
         // --- DATA ---
         const breadProducts = [
-            { id: 1, name: "Klassisches Sauerteigbrot", price: 6.50, image: "https://images.unsplash.com/photo-1585478259715-876a6a81fc08?auto=format&fit=crop&w=800&q=80", desc: "100% Natursauerteig, kräftige Kruste.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Sauerteig", "Meersalz"] },
-            { id: 2, name: "Roggen Sauerteigbrot", price: 6.90, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", desc: "Dunkel, malzig, extrem saftig.", ingredients: ["Roggenvollkornmehl", "Wasser", "Roggensauerteig", "Rübensirup", "Salz"] },
+            { id: 1, name: "Klassisches Sauerteigbrot", price: 6.50, image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=800&q=80", desc: "100% Natursauerteig, kräftige Kruste.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Sauerteig", "Meersalz"] },
+            { id: 2, name: "Roggen Sauerteigbrot", price: 6.90, image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80", desc: "Dunkel, malzig, extrem saftig.", ingredients: ["Roggenvollkornmehl", "Wasser", "Roggensauerteig", "Rübensirup", "Salz"] },
             { id: 3, name: "Dinkel Sauerteigbrot", price: 7.20, image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80", desc: "Nussig und gut bekömmlich.", ingredients: ["Dinkelmehl Typ 630", "Dinkelvollkornmehl", "Dinkelsauerteig", "Salz", "Wasser"] },
-            { id: 4, name: "Vollkornbrot", price: 5.80, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/Fan%20Cal.png?w=1920&h=1080", desc: "Vollgepackt mit Ballaststoffen.", ingredients: ["Weizenvollkorn", "Roggenvollkorn", "Sonnenblumenkerne", "Hefe", "Salz"] },
-            { id: 5, name: "Mehrkornbrot", price: 6.20, image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80", desc: "Mit Sonnenblumenkernen und Sesam.", ingredients: ["Weizen", "Roggen", "Haferflocken", "Leinsamen", "Sesam", "Kürbiskerne"] },
+            { id: 4, name: "Vollkornbrot", price: 5.80, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", desc: "Vollgepackt mit Ballaststoffen.", ingredients: ["Weizenvollkorn", "Roggenvollkorn", "Sonnenblumenkerne", "Hefe", "Salz"] },
+            { id: 5, name: "Mehrkornbrot", price: 6.20, image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=800&q=80", desc: "Mit Sonnenblumenkernen und Sesam.", ingredients: ["Weizen", "Roggen", "Haferflocken", "Leinsamen", "Sesam", "Kürbiskerne"] },
             { id: 6, name: "Bauernbrot", price: 5.50, image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&w=800&q=80", desc: "Der herzhafte Klassiker.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Hefe", "Natursauerteig", "Salz"] },
             { id: 7, name: "Olivenbrot", price: 7.50, image: "https://images.unsplash.com/photo-1533130061792-64b345e4a833?auto=format&fit=crop&w=800&q=80", desc: "Mit aromatischen Kalamata-Oliven.", ingredients: ["Weizenmehl", "Kalamata Oliven", "Olivenöl", "Oregano", "Meersalz", "Hefe"] },
             { id: 8, name: "Baguette (Sauerteig)", price: 3.90, image: "https://images.unsplash.com/photo-1598143153093-f9382f7c1f11?auto=format&fit=crop&w=800&q=80", desc: "Französisches Flair mit Sauerteig-Touch.", ingredients: ["Weizenmehl Typ 550", "Weizensauerteig", "Wasser", "Hefe", "Salz"] },
@@ -349,85 +316,12 @@
         let reviews = {};
         let currentUser = null;
 
-        // --- AI CHAT LOGIC ---
-        const chatToggle = document.getElementById('toggle-ai-chat');
-        const chatWindow = document.getElementById('ai-chat-window');
-        const chatMessages = document.getElementById('ai-chat-messages');
-        const chatInput = document.getElementById('ai-chat-input');
-        const chatSend = document.getElementById('ai-chat-send');
-
-        chatToggle.onclick = () => chatWindow.classList.toggle('active');
-
-        async function sendChatMessage() {
-            const msg = chatInput.value.trim();
-            if (!msg) return;
-
-            addChatMessage("user", msg);
-            chatInput.value = "";
-            
-            const loadingId = addChatMessage("ai", "Lasse mich kurz überlegen...");
-            
-            const systemPrompt = `Du bist ein freundlicher Brot-Experte für den Laden 'Brotal Gut'. 
-            Unser Sortiment umfasst: ${breadProducts.map(p => p.name).join(", ")}. 
-            Empfiehl Produkte basierend auf den Wünschen des Kunden. Antworte kurz und herzlich auf Deutsch.`;
-            
-            const aiResponse = await callGemini(msg, systemPrompt);
-            updateChatMessage(loadingId, aiResponse);
-        }
-
-        function addChatMessage(role, text) {
-            const id = Date.now();
-            const div = document.createElement('div');
-            div.id = `msg-${id}`;
-            div.className = role === 'user' 
-                ? "bg-gemini-purple text-white p-3 rounded-2xl rounded-tr-none shadow-sm ml-auto max-w-[80%]" 
-                : "bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[80%]";
-            div.innerText = text;
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            return id;
-        }
-
-        function updateChatMessage(id, text) {
-            const el = document.getElementById(`msg-${id}`);
-            if (el) el.innerText = text;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        chatSend.onclick = sendChatMessage;
-        chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendChatMessage(); };
-
-        // --- AI IMPROVE FEEDBACK ---
-        async function improveFeedback() {
-            const area = document.getElementById('feedback-text');
-            const current = area.value.trim();
-            if (!current) return;
-            
-            area.style.opacity = "0.5";
-            const systemPrompt = "Du bist ein Schreib-Assistent. Verbessere den folgenden Bewertungstext für eine Bäckerei. Mache ihn flüssiger, höflicher und aussagekräftiger, aber behalte die ursprüngliche Meinung bei. Antworte NUR mit dem verbesserten Text.";
-            const improved = await callGemini(current, systemPrompt);
-            area.value = improved;
-            area.style.opacity = "1";
-        }
-
-        // --- AI RECIPE GENERATOR ---
-        async function generateRecipe(productName) {
-            const btn = document.getElementById('ai-recipe-btn');
-            const container = document.getElementById('ai-recipe-result');
-            
-            btn.disabled = true;
-            btn.innerText = "✨ Zaubere Rezept...";
-            
-            const systemPrompt = `Du bist ein Gourmet-Koch. Erstelle eine kurze, kreative Rezeptidee oder einen Serviervorschlag (z.B. ein Sandwich oder ein Aufstrich) passend zum Brot '${productName}'. Antworte prägnant auf Deutsch. Nutze Emojis.`;
-            const recipe = await callGemini(`Gib mir ein kurzes Rezept für ${productName}`, systemPrompt);
-            
-            container.innerHTML = `<div class="mt-4 p-4 bg-gemini-purple/10 border border-gemini-purple/20 rounded-2xl text-sm italic">${recipe}</div>`;
-            btn.innerText = "✨ Neues Rezept generieren";
-            btn.disabled = false;
-        }
-
         // --- SYSTEM INIT ---
-        window.addEventListener('load', () => { setTimeout(() => document.getElementById('loader').classList.add('fade-out'), 800); });
+        window.addEventListener('load', () => { 
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('melt-out');
+            }, 1200); // Längere Verzögerung, damit man die schicke Animation kurz bewundern kann
+        });
         function formatPrice(p) { return p.toFixed(2).replace('.', ',') + ' €'; }
 
         function initTimer() {
@@ -547,16 +441,6 @@
                 <div class="md:w-1/2 p-8">
                     <h2 class="text-3xl font-serif mb-4">${p.name}</h2>
                     <p class="text-theme-brown/70 mb-4">${p.desc}</p>
-                    
-                    ${type === 'bread' ? `
-                        <div class="mb-6">
-                            <button id="ai-recipe-btn" onclick="generateRecipe('${p.name}')" class="text-sm font-bold text-gemini-purple flex items-center gap-2 hover:underline">
-                                ✨ Rezeptidee mit KI generieren
-                            </button>
-                            <div id="ai-recipe-result"></div>
-                        </div>
-                    ` : ''}
-
                     <h4 class="font-bold uppercase text-xs tracking-widest mb-2 opacity-50">Inhaltsstoffe</h4>
                     <ul class="list-disc list-inside text-sm mb-8 opacity-75">
                         ${p.ingredients.map(ing => `<li>${ing}</li>`).join('')}
@@ -583,6 +467,17 @@
             reviews[id].unshift({name: document.getElementById('feedback-name').value, text: document.getElementById('feedback-text').value});
             renderReviews(id);
             e.target.reset();
+        }
+
+        function submitGeneralFeedback(e) {
+            e.preventDefault();
+            const successMsg = document.getElementById('general-feedback-success');
+            successMsg.classList.remove('hidden');
+            e.target.reset();
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+                closeModal('about-modal');
+            }, 2500);
         }
 
         function handleLogin(e) {
