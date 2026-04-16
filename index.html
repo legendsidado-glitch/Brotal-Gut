@@ -5,33 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brotal Gut | Gesund, Lecker, Perfekt. 1894</title>
     
-    <!-- Google Fonts for Custom Typography -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS for Styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Configuration for strict theme colors -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'theme-brown': '#5D4037',          /* Brown */
-                        'theme-white': '#FFFFFF',          /* White */
-                        'theme-orange': '#FF9800',         /* Orange */
-                        'theme-pastel-orange': '#FFE0B2',  /* Pastel Orange */
-                        'theme-pastel-brown': '#D7CCC8',   /* Pastel Brown */
+                        'theme-brown': '#5D4037',
+                        'theme-white': '#FFFFFF',
+                        'theme-orange': '#FF9800',
+                        'theme-pastel-orange': '#FFE0B2',
+                        'theme-pastel-brown': '#D7CCC8',
+                        'theme-pastel-blue': '#E3F2FD',
+                        'theme-deep-blue': '#1976D2',
+                        'gemini-purple': '#8E75FF',
                     },
                     fontFamily: {
                         'serif': ['"Playfair Display"', 'serif'],
                         'sans': ['"Poppins"', 'sans-serif'],
-                    },
-                    borderRadius: {
-                        '2xl': '1rem',
-                        '3xl': '1.5rem'
                     }
                 }
             }
@@ -39,73 +37,85 @@
     </script>
 
     <style>
-        /* Smooth Scrolling */
         html { scroll-behavior: smooth; }
-
-        /* Custom Scrollbar to match theme */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #D7CCC8; }
         ::-webkit-scrollbar-thumb { background: #5D4037; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #FF9800; }
 
-        /* Theme Loading Animation */
         #loader {
-            position: fixed;
-            inset: 0;
-            background-color: #D7CCC8; /* Pastel Brown */
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            position: fixed; inset: 0; background-color: #D7CCC8; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.5s ease;
         }
         
         .dough-spinner {
-            width: 80px;
-            height: 80px;
-            border: 8px solid #FFFFFF; /* White */
-            border-top: 8px solid #FF9800; /* Orange */
-            border-radius: 50%;
-            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(93, 64, 55, 0.2);
+            width: 80px; height: 80px; border: 8px solid #FFFFFF; border-top: 8px solid #FF9800;
+            border-radius: 50%; animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(93, 64, 55, 0.2);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .fade-out { opacity: 0; pointer-events: none; }
+
+        .modal-overlay { opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; backdrop-filter: blur(4px); }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { transform: scale(0.95) translateY(20px); transition: all 0.3s ease-in-out; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+
+        .section-divider {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            overflow: hidden;
+            background: #D7CCC8;
+            margin-top: -2px;
         }
 
-        .fade-out {
-            opacity: 0;
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23E3F2FD" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: 50% 100%;
+            animation: waveMove 10s linear infinite;
+        }
+
+        .wave-delayed {
+            bottom: 10px;
+            opacity: 0.5;
+            animation: waveMove 15s linear infinite reverse;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .drink-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(25, 118, 210, 0.1), 0 10px 10px -5px rgba(25, 118, 210, 0.04);
+        }
+
+        /* AI Features Styles */
+        .ai-glow {
+            box-shadow: 0 0 15px rgba(142, 117, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .ai-glow:hover {
+            box-shadow: 0 0 25px rgba(142, 117, 255, 0.6);
+        }
+        #ai-chat-window {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            transform: translateY(20px) scale(0.95);
             pointer-events: none;
-        }
-
-        /* Modal Transitions */
-        .modal-overlay {
             opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease-in-out;
-            backdrop-filter: blur(4px);
         }
-        .modal-overlay.active {
+        #ai-chat-window.active {
+            transform: translateY(0) scale(1);
+            pointer-events: all;
             opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            transform: scale(0.95) translateY(20px);
-            transition: all 0.3s ease-in-out;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        /* Hide number input spinners */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
         }
     </style>
 </head>
@@ -145,15 +155,12 @@
         </div>
     </nav>
 
-    <!-- Hero / Timer Section -->
+    <!-- Hero Section -->
     <header class="pt-32 pb-16 px-6 max-w-7xl mx-auto relative">
         <div class="bg-theme-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(93,64,55,0.15)] relative">
             <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1600&q=80" alt="Sauerteigbrot Hero" class="w-full h-96 object-cover opacity-90">
             <div class="absolute inset-0 bg-gradient-to-t from-theme-brown/90 to-transparent flex flex-col justify-end p-8 md:p-12">
                 <h2 class="text-4xl md:text-5xl font-serif text-theme-white mb-4">Das beste Sauerteigbrot der Welt.</h2>
-                <p class="text-theme-pastel-orange text-lg max-w-2xl mb-8">Wir bereiten uns auf die Neueröffnung vor. Echte Handwerkskunst braucht Zeit zum Gären. Erlebe den unvergleichlichen Geschmack aus 100% Natursauerteig.</p>
-                
-                <!-- Release Timer -->
                 <div class="bg-theme-pastel-brown/20 backdrop-blur-md rounded-2xl p-6 border border-theme-pastel-orange/30 inline-block max-w-fit">
                     <h3 class="text-theme-white font-medium mb-3">Offizieller Release in:</h3>
                     <div class="flex gap-4 text-center" id="countdown-timer">
@@ -167,505 +174,432 @@
         </div>
     </header>
 
-    <!-- Shop Section -->
-    <main class="max-w-7xl mx-auto px-6 py-12 mb-20">
-        <h2 class="text-4xl font-serif text-theme-brown mb-2 text-center">Unser Sortiment</h2>
+    <!-- Bread Shop Section -->
+    <section id="bread-section" class="max-w-7xl mx-auto px-6 py-12">
+        <h2 class="text-4xl font-serif text-theme-brown mb-2 text-center">Brot-Spezialitäten</h2>
         <div class="w-24 h-1 bg-theme-orange mx-auto mb-12 rounded-full"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid"></div>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-grid">
-            <!-- Products injected by JS -->
+    <!-- Transition Section -->
+    <div class="section-divider">
+        <div class="wave"></div>
+        <div class="wave wave-delayed"></div>
+    </div>
+
+    <!-- Drinks Section -->
+    <section id="drinks-section" class="bg-theme-pastel-blue py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-serif text-theme-deep-blue mb-2 text-center">Erfrischungen & Heißgetränke</h2>
+            <div class="w-24 h-1 bg-theme-deep-blue mx-auto mb-12 rounded-full"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="drinks-grid"></div>
         </div>
-    </main>
+    </section>
+
+    <!-- AI Chat Floating Button -->
+    <div class="fixed bottom-6 right-6 z-[200]">
+        <button id="toggle-ai-chat" class="w-16 h-16 bg-gemini-purple text-white rounded-full shadow-2xl flex items-center justify-center ai-glow hover:scale-110 transition-transform">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        </button>
+        <div id="ai-chat-window" class="absolute bottom-20 right-0 w-80 md:w-96 bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col border border-gemini-purple/20">
+            <div class="bg-gemini-purple p-4 text-white">
+                <h3 class="font-serif font-bold">✨ Brot-Berater</h3>
+                <p class="text-xs opacity-80">Frage mich nach dem passenden Brot!</p>
+            </div>
+            <div id="ai-chat-messages" class="h-64 overflow-y-auto p-4 space-y-3 bg-gray-50 text-sm">
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100">Hallo! Ich bin dein Brotal-Gut Assistent. Welches Brot suchst du heute?</div>
+            </div>
+            <div class="p-3 border-t bg-white flex gap-2">
+                <input type="text" id="ai-chat-input" class="flex-1 p-2 rounded-xl bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-gemini-purple" placeholder="Nachricht schreiben...">
+                <button id="ai-chat-send" class="p-2 bg-gemini-purple text-white rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-theme-brown text-theme-white rounded-t-3xl mt-12 py-10 text-center">
+    <footer class="bg-theme-brown text-theme-white py-10 text-center">
         <h2 class="text-2xl font-serif mb-2">Brotal Gut</h2>
         <p class="text-theme-pastel-orange text-sm mb-6">Gesund, Lecker, Perfekt. 1894</p>
-        <p class="text-sm opacity-80">made by: Die Brotale Gruppe</p>
     </footer>
 
-    <!-- ================== MODALS ================== -->
-
-    <!-- Product Details Modal -->
+    <!-- Modals -->
     <div id="product-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/60 flex justify-center items-center p-4">
         <div class="modal-content bg-theme-white w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl relative">
-            <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-theme-pastel-brown text-theme-brown w-10 h-10 rounded-full flex items-center justify-center hover:bg-theme-orange hover:text-theme-white transition-colors z-10">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            
-            <div id="modal-product-content" class="flex flex-col md:flex-row">
-                <!-- Content injected by JS -->
-            </div>
-
-            <!-- Feedback & Reviews Section -->
+            <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 bg-theme-pastel-brown text-theme-brown w-10 h-10 rounded-full flex items-center justify-center z-10">✕</button>
+            <div id="modal-product-content" class="flex flex-col md:flex-row"></div>
             <div class="p-8 border-t border-theme-pastel-brown bg-theme-pastel-orange/10 rounded-b-3xl">
                 <h3 class="text-2xl font-serif text-theme-brown mb-6">Kundenbewertungen</h3>
-                
-                <!-- Feedback Form -->
-                <form id="feedback-form" class="bg-theme-white p-6 rounded-2xl shadow-sm border border-theme-pastel-brown mb-8" onsubmit="submitFeedback(event)">
-                    <h4 class="font-medium text-theme-brown mb-4">Feedback hinterlassen</h4>
+                <form id="feedback-form" class="bg-theme-white p-6 rounded-2xl border border-theme-pastel-brown mb-8" onsubmit="submitFeedback(event)">
                     <input type="hidden" id="feedback-product-id">
-                    <div class="mb-4">
-                        <label class="block text-sm text-theme-brown mb-2">Ihre Bewertung</label>
-                        <select id="feedback-rating" class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" required>
-                            <option value="5">5 Sterne - Perfekt!</option>
-                            <option value="4">4 Sterne - Sehr gut</option>
-                            <option value="3">3 Sterne - Gut</option>
-                            <option value="2">2 Sterne - Nicht mein Fall</option>
-                            <option value="1">1 Stern - Enttäuschend</option>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <select id="feedback-rating" class="p-3 rounded-xl bg-theme-pastel-brown/20" required>
+                            <option value="5">5 Sterne</option><option value="4">4 Sterne</option><option value="3">3 Sterne</option>
                         </select>
+                        <input type="text" id="feedback-name" required class="p-3 rounded-xl bg-theme-pastel-brown/20" placeholder="Name">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm text-theme-brown mb-2">Ihr Name</label>
-                        <input type="text" id="feedback-name" required class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="Max Mustermann">
+                    <div class="relative mb-4">
+                        <textarea id="feedback-text" required rows="3" class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 pr-12" placeholder="Deine Meinung..."></textarea>
+                        <button type="button" onclick="improveFeedback()" class="absolute right-3 bottom-3 text-gemini-purple hover:scale-110 transition-transform" title="✨ Text mit KI verbessern">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </button>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm text-theme-brown mb-2">Ihre Meinung</label>
-                        <textarea id="feedback-text" required rows="3" class="w-full p-3 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="Wie hat Ihnen das Brot geschmeckt?"></textarea>
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-theme-orange text-theme-white rounded-xl font-medium hover:bg-theme-brown transition-colors">Bewertung absenden</button>
+                    <button type="submit" class="w-full py-3 bg-theme-orange text-theme-white rounded-xl">Bewertung absenden</button>
                 </form>
-
-                <!-- Reviews List (Starts Empty as requested) -->
-                <div id="reviews-list" class="space-y-4">
-                    <!-- Reviews injected here -->
-                </div>
+                <div id="reviews-list" class="space-y-4"></div>
             </div>
         </div>
     </div>
 
-    <!-- Cart Modal -->
     <div id="cart-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/60 flex justify-end">
-        <div class="modal-content bg-theme-white w-full max-w-md h-full rounded-l-3xl shadow-2xl flex flex-col relative transform translate-x-0 transition-transform duration-300">
-            <div class="p-6 border-b border-theme-pastel-brown flex justify-between items-center bg-theme-pastel-brown/20 rounded-tl-3xl">
-                <h2 class="text-2xl font-serif text-theme-brown">Ihr Warenkorb</h2>
-                <button onclick="closeModal('cart-modal')" class="text-theme-brown hover:text-theme-orange transition-colors">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+        <div class="modal-content bg-theme-white w-full max-w-md h-full rounded-l-3xl shadow-2xl flex flex-col relative">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-serif">Warenkorb</h2>
+                <button onclick="closeModal('cart-modal')" class="text-2xl">✕</button>
             </div>
-            
-            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-                <!-- Cart items injected by JS -->
-                <div class="text-center text-theme-brown/60 mt-10" id="empty-cart-msg">
-                    <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    Der Warenkorb ist noch leer.
-                </div>
-            </div>
-
-            <div class="p-6 border-t border-theme-pastel-brown bg-theme-white">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-lg font-medium text-theme-brown">Gesamtsumme:</span>
-                    <span class="text-2xl font-bold text-theme-orange" id="cart-total-modal">0,00 €</span>
-                </div>
-                <button onclick="checkout()" class="w-full py-4 bg-theme-brown text-theme-white rounded-2xl font-medium text-lg hover:bg-theme-orange transition-colors shadow-lg">Zur Kasse gehen</button>
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+            <div class="p-6 border-t">
+                <div class="flex justify-between mb-6"><span class="text-lg">Gesamt:</span><span id="cart-total-modal" class="text-2xl font-bold">0,00 €</span></div>
+                <button onclick="checkout()" class="w-full py-4 bg-theme-brown text-theme-white rounded-2xl">Kasse</button>
             </div>
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div id="login-modal" class="modal-overlay fixed inset-0 z-[100] bg-theme-brown/80 flex justify-center items-center p-4">
-        <div class="modal-content bg-theme-white w-full max-w-md rounded-3xl shadow-2xl relative overflow-hidden">
-            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-theme-brown hover:text-theme-orange z-10 transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            
-            <div class="bg-theme-pastel-orange p-8 text-center rounded-t-3xl">
-                <h2 class="text-3xl font-serif text-theme-brown font-bold">Willkommen zurück</h2>
-                <p class="text-theme-brown/80 mt-2">Melde dich bei Brotal Gut an.</p>
-            </div>
-            
-            <form id="login-form" class="p-8" onsubmit="handleLogin(event)">
-                <div class="mb-5">
-                    <label class="block text-sm font-medium text-theme-brown mb-2">E-Mail Adresse</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-3 rounded-2xl bg-theme-pastel-brown/30 border border-theme-pastel-brown text-theme-brown focus:ring-2 focus:ring-theme-orange focus:border-transparent outline-none transition-all" placeholder="bäcker@brotalgut.de">
-                </div>
-                <div class="mb-8">
-                    <label class="block text-sm font-medium text-theme-brown mb-2">Passwort</label>
-                    <input type="password" required minlength="6" class="w-full px-4 py-3 rounded-2xl bg-theme-pastel-brown/30 border border-theme-pastel-brown text-theme-brown focus:ring-2 focus:ring-theme-orange focus:border-transparent outline-none transition-all" placeholder="••••••••">
-                </div>
-                
-                <button type="submit" id="login-btn" class="w-full py-4 bg-theme-orange text-theme-white rounded-2xl font-medium text-lg hover:bg-theme-brown transition-colors shadow-lg flex justify-center items-center gap-2">
-                    <span>Anmelden</span>
-                </button>
-                
-                <div id="login-success" class="hidden mt-4 text-center text-green-600 font-medium bg-green-50 p-3 rounded-xl border border-green-200">
-                    Erfolgreich eingeloggt!
-                </div>
+        <div class="modal-content bg-theme-white w-full max-w-md rounded-3xl p-8 relative">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4">✕</button>
+            <h2 class="text-2xl font-serif mb-6 text-center">Login</h2>
+            <form onsubmit="handleLogin(event)">
+                <input type="email" id="login-email" required class="w-full p-4 mb-4 rounded-xl bg-theme-pastel-brown/20" placeholder="E-Mail">
+                <input type="password" required class="w-full p-4 mb-6 rounded-xl bg-theme-pastel-brown/20" placeholder="Passwort">
+                <button type="submit" id="login-btn" class="w-full py-4 bg-theme-orange text-theme-white rounded-xl">Anmelden</button>
+                <div id="login-success" class="hidden mt-4 text-center text-green-600">Erfolg!</div>
             </form>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
-        // --- 1. System Setup & Data ---
-        
-        // Remove Loading Screen on load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('fade-out');
-            }, 800);
-        });
+        // --- GEMINI API HELPERS ---
+        const apiKey = "";
+        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
 
-        const products = [
-            {
-                id: 1,
-                name: "Klassisches Bauernbrot",
-                price: 6.50,
-                shortDesc: "Unser traditionelles Brot mit knuspriger Kruste.",
-                fullDesc: "Das Klassische Bauernbrot wird nach einem 100 Jahre alten Rezept gebacken. Die Kombination aus langer Teigruhe und unserem hauseigenen Natursauerteig sorgt für eine unvergleichlich weiche Krume und eine kräftig ausgebackene, rösche Kruste. Perfekt für das tägliche Abendbrot oder deftige Aufstriche.",
-                ingredients: ["Weizenmehl Typ 1050", "Roggenmehl Typ 1150", "Wasser", "Hauseigener Natursauerteig", "Meersalz"],
-                image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 2,
-                name: "Walnuss-Sauerteig",
-                price: 8.20,
-                shortDesc: "Herzhaftes Brot mit knackigen Walnussstücken.",
-                fullDesc: "Ein echtes Meisterwerk unserer Bäckerei. Der dunkle Roggen-Sauerteig harmoniert exzellent mit den leicht gerösteten französischen Walnüssen. Ein leicht süßlicher Unterton wird durch einen Hinzufügen von einem Löffel regionalem Waldhonig erreicht. Ideal zu kräftigem Käse und Rotwein.",
-                ingredients: ["Roggenmehl", "Weizenmehl", "Wasser", "Walnüsse (15%)", "Natursauerteig", "Waldhonig", "Salz"],
-                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 3,
-                name: "Roggenschrot Spezial",
-                price: 5.90,
-                shortDesc: "Kräftig im Geschmack mit einer feinen Gewürznote.",
-                fullDesc: "Für Liebhaber des puren Geschmacks. Dieses 100% Roggenbrot besticht durch seinen hohen Anteil an Vollkornschrot, was es besonders saftig macht und dafür sorgt, dass es tagelang frisch bleibt. Verfeinert mit klassischen Brotgewürzen für den unverwechselbaren, traditionellen Duft.",
-                ingredients: ["Roggenschrot", "Wasser", "Roggensauerteig", "Meersalz", "Koriander", "Kümmel", "Fenchel"],
-                image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80"
+        async function callGemini(prompt, systemInstruction = "") {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+            let retries = 0;
+            const maxRetries = 5;
+
+            while (retries < maxRetries) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined
+                        })
+                    });
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Entschuldigung, ich konnte keine Antwort generieren.";
+                } catch (error) {
+                    retries++;
+                    const delay = Math.pow(2, retries) * 500;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    if (retries === maxRetries) return "Fehler bei der Verbindung zur KI. Bitte später versuchen.";
+                }
             }
+        }
+
+        // --- DATA ---
+        const breadProducts = [
+            { id: 1, name: "Klassisches Sauerteigbrot", price: 6.50, image: "https://images.unsplash.com/photo-1585478259715-876a6a81fc08?auto=format&fit=crop&w=800&q=80", desc: "100% Natursauerteig, kräftige Kruste.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Sauerteig", "Meersalz"] },
+            { id: 2, name: "Roggen Sauerteigbrot", price: 6.90, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", desc: "Dunkel, malzig, extrem saftig.", ingredients: ["Roggenvollkornmehl", "Wasser", "Roggensauerteig", "Rübensirup", "Salz"] },
+            { id: 3, name: "Dinkel Sauerteigbrot", price: 7.20, image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80", desc: "Nussig und gut bekömmlich.", ingredients: ["Dinkelmehl Typ 630", "Dinkelvollkornmehl", "Dinkelsauerteig", "Salz", "Wasser"] },
+            { id: 4, name: "Vollkornbrot", price: 5.80, image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=800&q=80", desc: "Vollgepackt mit Ballaststoffen.", ingredients: ["Weizenvollkorn", "Roggenvollkorn", "Sonnenblumenkerne", "Hefe", "Salz"] },
+            { id: 5, name: "Mehrkornbrot", price: 6.20, image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80", desc: "Mit Sonnenblumenkernen und Sesam.", ingredients: ["Weizen", "Roggen", "Haferflocken", "Leinsamen", "Sesam", "Kürbiskerne"] },
+            { id: 6, name: "Bauernbrot", price: 5.50, image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&w=800&q=80", desc: "Der herzhafte Klassiker.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Hefe", "Natursauerteig", "Salz"] },
+            { id: 7, name: "Olivenbrot", price: 7.50, image: "https://images.unsplash.com/photo-1533130061792-64b345e4a833?auto=format&fit=crop&w=800&q=80", desc: "Mit aromatischen Kalamata-Oliven.", ingredients: ["Weizenmehl", "Kalamata Oliven", "Olivenöl", "Oregano", "Meersalz", "Hefe"] },
+            { id: 8, name: "Baguette (Sauerteig)", price: 3.90, image: "https://images.unsplash.com/photo-1598143153093-f9382f7c1f11?auto=format&fit=crop&w=800&q=80", desc: "Französisches Flair mit Sauerteig-Touch.", ingredients: ["Weizenmehl Typ 550", "Weizensauerteig", "Wasser", "Hefe", "Salz"] },
+            { id: 9, name: "Ciabatta", price: 4.20, image: "https://images.unsplash.com/photo-1621932953986-05d00bb21a28?auto=format&fit=crop&w=800&q=80", desc: "Luftig, leicht, mediterran.", ingredients: ["Weizenmehl", "Extra Vergine Olivenöl", "Viel Wasser", "Hefe", "Salz"] }
         ];
 
-        // State
+        const drinkProducts = [
+            { id: 101, name: "Wasser (still)", price: 2.50, image: "https://images.unsplash.com/photo-1523362628566-4c53f936b3c1?auto=format&fit=crop&w=800&q=80", desc: "Natürliches Mineralwasser ohne Kohlensäure.", ingredients: ["100% Mineralwasser"] },
+            { id: 102, name: "Wasser (sprudelnd)", price: 2.50, image: "https://images.unsplash.com/photo-1559839914-17aae19cea9e?auto=format&fit=crop&w=800&q=80", desc: "Frisch sprudelnd für die extra Erfrischung.", ingredients: ["Mineralwasser", "Kohlensäure"] },
+            { id: 103, name: "Cola", price: 3.20, image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=800&q=80", desc: "Der klassische Koffein-Kick.", ingredients: ["Wasser", "Zucker", "Kohlensäure", "Koffein", "Aromen"] },
+            { id: 104, name: "Fanta / Orange", price: 3.20, image: "https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=800&q=80", desc: "Fruchtige Orangenlimonade.", ingredients: ["Wasser", "Orangensaftkonzentrat", "Zucker", "Aroma"] },
+            { id: 105, name: "Sprite / Zitrone", price: 3.20, image: "https://images.unsplash.com/photo-1625772290748-39126ddd9661?auto=format&fit=crop&w=800&q=80", desc: "Klare Zitronen-Limetten-Erfrischung.", ingredients: ["Wasser", "Zucker", "Kohlensäure", "Zitronensäure"] },
+            { id: 106, name: "Eistee (Pfirsich)", price: 3.50, image: "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=800&q=80", desc: "Süßer Pfirsichgeschmack auf Teebasis.", ingredients: ["Schwarztee-Extrakt", "Pfirsichsaft", "Zucker"] },
+            { id: 107, name: "Eistee (Zitrone)", price: 3.50, image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80", desc: "Belebende Zitrone mit echtem Tee.", ingredients: ["Schwarztee-Extrakt", "Zitronensaft", "Zucker"] },
+            { id: 108, name: "Apfelschorle", price: 3.20, image: "https://images.unsplash.com/photo-1603396756584-8941e111a40c?auto=format&fit=crop&w=800&q=80", desc: "Natürlicher Apfelsaft mit Sprudelwasser.", ingredients: ["50% Apfelsaft", "50% Mineralwasser", "Kohlensäure"] },
+            { id: 109, name: "Orangensaft", price: 3.80, image: "https://images.unsplash.com/photo-1600271886301-46961609101d?auto=format&fit=crop&w=800&q=80", desc: "100% Direktsaft, frisch gepresst.", ingredients: ["100% Orangensaft"] },
+            { id: 110, name: "Kaffee (schwarz)", price: 2.80, image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80", desc: "Frisch gemahlene Arabica-Bohnen.", ingredients: ["Gefiltertes Wasser", "Arabica Kaffee"] },
+            { id: 111, name: "Espresso", price: 2.20, image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=800&q=80", desc: "Stark, klein, mit perfekter Crema.", ingredients: ["Espresso-Röstung", "Druckgebrüht"] },
+            { id: 112, name: "Cappuccino", price: 3.50, image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80", desc: "Espresso mit cremigem Milchschaum.", ingredients: ["Espresso", "Aufgeschäumte Milch"] },
+            { id: 113, name: "Latte Macchiato", price: 3.90, image: "https://images.unsplash.com/photo-1599398054066-846f28917f38?auto=format&fit=crop&w=800&q=80", desc: "Drei Schichten purer Genuss.", ingredients: ["Viel heiße Milch", "Espresso", "Milchschaum"] },
+            { id: 114, name: "Milchkaffee", price: 3.70, image: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?auto=format&fit=crop&w=800&q=80", desc: "Klassisch, mild und ausgewogen.", ingredients: ["Kaffee", "Warme Milch"] },
+            { id: 115, name: "Flat White", price: 4.10, image: "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&w=800&q=80", desc: "Doppelter Ristretto mit feinem Mikroschaum.", ingredients: ["Ristretto", "Feinporiger Milchschaum"] },
+            { id: 116, name: "Heiße Schokolade", price: 3.80, image: "https://images.unsplash.com/photo-1544787210-2213d84ad96b?auto=format&fit=crop&w=800&q=80", desc: "Echte Zartbitter-Schokolade in heißer Milch.", ingredients: ["Milch", "Kakao", "Echte Schokoladenstücke"] },
+            { id: 117, name: "Tee (Schwarz)", price: 3.00, image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80", desc: "Klassischer Earl Grey oder Assam.", ingredients: ["Schwarzteeblätter", "Heißes Wasser"] },
+            { id: 118, name: "Tee (Kräuter)", price: 3.00, image: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=800&q=80", desc: "Beruhigende Mischung aus Minze und Melisse.", ingredients: ["Pfefferminze", "Kamille", "Melisse"] },
+            { id: 119, name: "Tee (Früchte)", price: 3.00, image: "https://images.unsplash.com/photo-1512533330311-975569426f63?auto=format&fit=crop&w=800&q=80", desc: "Beerenstarkes Aroma, natürlich süß.", ingredients: ["Hagebutte", "Hibiskus", "Beerenmischung"] }
+        ];
+
         let cart = [];
+        let reviews = {};
         let currentUser = null;
-        // Structure: { productId: [{ rating, name, text, date }] }
-        let reviews = {}; 
 
-        // --- 2. Countdown Timer Logic ---
+        // --- AI CHAT LOGIC ---
+        const chatToggle = document.getElementById('toggle-ai-chat');
+        const chatWindow = document.getElementById('ai-chat-window');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatSend = document.getElementById('ai-chat-send');
+
+        chatToggle.onclick = () => chatWindow.classList.toggle('active');
+
+        async function sendChatMessage() {
+            const msg = chatInput.value.trim();
+            if (!msg) return;
+
+            addChatMessage("user", msg);
+            chatInput.value = "";
+            
+            const loadingId = addChatMessage("ai", "Lasse mich kurz überlegen...");
+            
+            const systemPrompt = `Du bist ein freundlicher Brot-Experte für den Laden 'Brotal Gut'. 
+            Unser Sortiment umfasst: ${breadProducts.map(p => p.name).join(", ")}. 
+            Empfiehl Produkte basierend auf den Wünschen des Kunden. Antworte kurz und herzlich auf Deutsch.`;
+            
+            const aiResponse = await callGemini(msg, systemPrompt);
+            updateChatMessage(loadingId, aiResponse);
+        }
+
+        function addChatMessage(role, text) {
+            const id = Date.now();
+            const div = document.createElement('div');
+            div.id = `msg-${id}`;
+            div.className = role === 'user' 
+                ? "bg-gemini-purple text-white p-3 rounded-2xl rounded-tr-none shadow-sm ml-auto max-w-[80%]" 
+                : "bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[80%]";
+            div.innerText = text;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return id;
+        }
+
+        function updateChatMessage(id, text) {
+            const el = document.getElementById(`msg-${id}`);
+            if (el) el.innerText = text;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        chatSend.onclick = sendChatMessage;
+        chatInput.onkeypress = (e) => { if(e.key === 'Enter') sendChatMessage(); };
+
+        // --- AI IMPROVE FEEDBACK ---
+        async function improveFeedback() {
+            const area = document.getElementById('feedback-text');
+            const current = area.value.trim();
+            if (!current) return;
+            
+            area.style.opacity = "0.5";
+            const systemPrompt = "Du bist ein Schreib-Assistent. Verbessere den folgenden Bewertungstext für eine Bäckerei. Mache ihn flüssiger, höflicher und aussagekräftiger, aber behalte die ursprüngliche Meinung bei. Antworte NUR mit dem verbesserten Text.";
+            const improved = await callGemini(current, systemPrompt);
+            area.value = improved;
+            area.style.opacity = "1";
+        }
+
+        // --- AI RECIPE GENERATOR ---
+        async function generateRecipe(productName) {
+            const btn = document.getElementById('ai-recipe-btn');
+            const container = document.getElementById('ai-recipe-result');
+            
+            btn.disabled = true;
+            btn.innerText = "✨ Zaubere Rezept...";
+            
+            const systemPrompt = `Du bist ein Gourmet-Koch. Erstelle eine kurze, kreative Rezeptidee oder einen Serviervorschlag (z.B. ein Sandwich oder ein Aufstrich) passend zum Brot '${productName}'. Antworte prägnant auf Deutsch. Nutze Emojis.`;
+            const recipe = await callGemini(`Gib mir ein kurzes Rezept für ${productName}`, systemPrompt);
+            
+            container.innerHTML = `<div class="mt-4 p-4 bg-gemini-purple/10 border border-gemini-purple/20 rounded-2xl text-sm italic">${recipe}</div>`;
+            btn.innerText = "✨ Neues Rezept generieren";
+            btn.disabled = false;
+        }
+
+        // --- SYSTEM INIT ---
+        window.addEventListener('load', () => { setTimeout(() => document.getElementById('loader').classList.add('fade-out'), 800); });
+        function formatPrice(p) { return p.toFixed(2).replace('.', ',') + ' €'; }
+
         function initTimer() {
-            // Calculate "Tomorrow at 12:45 German Time"
-            const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setDate(now.getDate() + 1);
-            tomorrow.setHours(12, 45, 0, 0);
-            
-            const releaseDate = tomorrow.getTime();
-            
-            const timerInterval = setInterval(function() {
-                const currentTime = new Date().getTime();
-                const distance = releaseDate - currentTime;
-
-                if (distance < 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById("countdown-timer").innerHTML = "<div class='text-theme-orange font-bold text-xl'>Wir haben geöffnet!</div>";
-                    return;
-                }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("timer-days").innerText = days.toString().padStart(2, '0');
-                document.getElementById("timer-hours").innerText = hours.toString().padStart(2, '0');
-                document.getElementById("timer-mins").innerText = minutes.toString().padStart(2, '0');
-                document.getElementById("timer-secs").innerText = seconds.toString().padStart(2, '0');
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(12, 45, 0, 0);
+            const release = tomorrow.getTime();
+            setInterval(() => {
+                const dist = release - Date.now();
+                if (dist < 0) return;
+                document.getElementById("timer-days").innerText = Math.floor(dist / 86400000).toString().padStart(2, '0');
+                document.getElementById("timer-hours").innerText = Math.floor((dist % 86400000) / 3600000).toString().padStart(2, '0');
+                document.getElementById("timer-mins").innerText = Math.floor((dist % 3600000) / 60000).toString().padStart(2, '0');
+                document.getElementById("timer-secs").innerText = Math.floor((dist % 60000) / 1000).toString().padStart(2, '0');
             }, 1000);
         }
         initTimer();
 
-        // --- 3. UI Rendering ---
-        
-        function formatPrice(price) {
-            return price.toFixed(2).replace('.', ',') + ' €';
-        }
-
-        function renderProducts() {
+        // --- RENDER FUNCTIONS ---
+        function renderBreads() {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-
-            products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = "bg-theme-white rounded-3xl overflow-hidden shadow-[0_4px_15px_rgba(93,64,55,0.08)] hover:shadow-[0_8px_25px_rgba(255,152,0,0.2)] transition-shadow duration-300 flex flex-col border border-theme-pastel-brown/30";
-                
-                card.innerHTML = `
-                    <div class="h-64 overflow-hidden relative group">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute top-4 right-4 bg-theme-white text-theme-orange font-bold px-4 py-2 rounded-xl shadow-md">
-                            ${formatPrice(product.price)}
-                        </div>
+            grid.innerHTML = breadProducts.map(p => `
+                <div class="bg-theme-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-theme-pastel-brown/30 flex flex-col">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="${p.image}" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-theme-white text-theme-orange font-bold px-3 py-1 rounded-xl shadow-sm">${formatPrice(p.price)}</div>
                     </div>
                     <div class="p-6 flex flex-col flex-1">
-                        <h3 class="text-2xl font-serif text-theme-brown mb-2">${product.name}</h3>
-                        <p class="text-theme-brown/70 mb-6 flex-1">${product.shortDesc}</p>
-                        <div class="flex gap-3">
-                            <button onclick="openProductDetails(${product.id})" class="flex-1 py-3 bg-theme-pastel-orange text-theme-brown rounded-2xl font-medium hover:bg-theme-orange hover:text-theme-white transition-colors">Details ansehen</button>
-                            <button onclick="addToCart(${product.id})" class="w-12 h-12 flex items-center justify-center bg-theme-brown text-theme-white rounded-2xl hover:bg-theme-orange transition-colors shrink-0" title="In den Warenkorb">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            </button>
+                        <h3 class="text-xl font-serif mb-2">${p.name}</h3>
+                        <p class="text-sm text-theme-brown/70 mb-6 flex-1">${p.desc}</p>
+                        <div class="flex gap-2">
+                            <button onclick="openProductDetails(${p.id}, 'bread')" class="flex-1 py-2 bg-theme-pastel-orange rounded-xl text-sm font-medium hover:bg-theme-orange transition-colors">Details</button>
+                            <button onclick="addToCart(${p.id}, 'bread')" class="w-10 h-10 bg-theme-brown text-theme-white rounded-xl hover:bg-theme-orange transition-colors">＋</button>
                         </div>
                     </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-        renderProducts();
-
-        // --- 4. Modal Management ---
-        
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                event.target.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // --- 5. Product Details & Reviews ---
-
-        function getAverageRating(productId) {
-            const productReviews = reviews[productId] || [];
-            if (productReviews.length === 0) return 0;
-            const sum = productReviews.reduce((acc, curr) => acc + parseInt(curr.rating), 0);
-            return (sum / productReviews.length).toFixed(1);
-        }
-
-        function renderStars(rating) {
-            let starsHTML = '';
-            for(let i=1; i<=5; i++) {
-                if(i <= rating) {
-                    starsHTML += `<svg class="w-5 h-5 text-theme-orange fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
-                } else {
-                    starsHTML += `<svg class="w-5 h-5 text-theme-pastel-brown fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
-                }
-            }
-            return starsHTML;
-        }
-
-        function openProductDetails(id) {
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            const avgRating = getAverageRating(id);
-            const reviewCount = (reviews[id] || []).length;
-
-            const content = document.getElementById('modal-product-content');
-            content.innerHTML = `
-                <div class="md:w-1/2 rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none overflow-hidden relative">
-                    <img src="${product.image}" class="w-full h-64 md:h-full object-cover">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-theme-brown to-transparent p-6">
-                        <span class="text-3xl font-bold text-theme-white">${formatPrice(product.price)}</span>
-                    </div>
-                </div>
-                <div class="md:w-1/2 p-8">
-                    <h2 class="text-3xl font-serif text-theme-brown mb-2">${product.name}</h2>
-                    
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="flex">${renderStars(Math.round(avgRating))}</div>
-                        <span class="text-sm text-theme-brown/60">(${reviewCount} Bewertungen)</span>
-                    </div>
-
-                    <h4 class="font-bold text-theme-brown mb-2 uppercase tracking-wider text-sm">Beschreibung</h4>
-                    <p class="text-theme-brown/80 mb-6 text-sm leading-relaxed">${product.fullDesc}</p>
-                    
-                    <h4 class="font-bold text-theme-brown mb-2 uppercase tracking-wider text-sm">Zutaten</h4>
-                    <ul class="list-disc list-inside text-theme-brown/80 mb-8 text-sm bg-theme-pastel-brown/20 p-4 rounded-xl">
-                        ${product.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                    </ul>
-
-                    <button onclick="addToCart(${product.id}); closeModal('product-modal'); openModal('cart-modal');" class="w-full py-4 bg-theme-brown text-theme-white rounded-2xl font-medium hover:bg-theme-orange transition-colors flex justify-center items-center gap-2 shadow-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        In den Warenkorb
-                    </button>
-                </div>
-            `;
-
-            document.getElementById('feedback-product-id').value = id;
-            if(currentUser) {
-                document.getElementById('feedback-name').value = currentUser.name;
-                document.getElementById('feedback-name').readOnly = true;
-            } else {
-                document.getElementById('feedback-name').value = '';
-                document.getElementById('feedback-name').readOnly = false;
-            }
-            renderReviewsList(id);
-
-            openModal('product-modal');
-        }
-
-        function renderReviewsList(productId) {
-            const listContainer = document.getElementById('reviews-list');
-            const productReviews = reviews[productId] || [];
-
-            if (productReviews.length === 0) {
-                listContainer.innerHTML = `<p class="text-theme-brown/60 text-center italic py-4">Noch keine Bewertungen vorhanden. Sei der Erste!</p>`;
-                return;
-            }
-
-            listContainer.innerHTML = productReviews.map(rev => `
-                <div class="bg-theme-white p-4 rounded-xl shadow-sm border border-theme-pastel-brown">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <span class="font-medium text-theme-brown block">${rev.name}</span>
-                            <span class="text-xs text-theme-brown/50">${rev.date}</span>
-                        </div>
-                        <div class="flex">${renderStars(rev.rating)}</div>
-                    </div>
-                    <p class="text-theme-brown/80 text-sm">${rev.text}</p>
                 </div>
             `).join('');
         }
 
-        function submitFeedback(e) {
-            e.preventDefault();
-            const productId = document.getElementById('feedback-product-id').value;
-            const rating = document.getElementById('feedback-rating').value;
-            const name = document.getElementById('feedback-name').value;
-            const text = document.getElementById('feedback-text').value;
-            const date = new Date().toLocaleDateString('de-DE');
-
-            if (!reviews[productId]) {
-                reviews[productId] = [];
-            }
-
-            reviews[productId].unshift({ rating, name, text, date });
-
-            e.target.reset();
-            renderReviewsList(productId);
-            
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Gespeichert!";
-            btn.classList.add('bg-green-600');
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('bg-green-600');
-                openProductDetails(parseInt(productId)); 
-            }, 1500);
+        function renderDrinks() {
+            const grid = document.getElementById('drinks-grid');
+            grid.innerHTML = drinkProducts.map(d => `
+                <div class="drink-card bg-white overflow-hidden rounded-3xl border border-blue-100 flex flex-col transition-all">
+                    <div class="h-40 overflow-hidden relative">
+                        <img src="${d.image}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-white text-theme-deep-blue text-xs font-bold px-2 py-1 rounded-lg">${formatPrice(d.price)}</div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-1 text-center">
+                        <h4 class="font-medium text-theme-deep-blue mb-3 line-clamp-1">${d.name}</h4>
+                        <div class="flex gap-2">
+                            <button onclick="openProductDetails(${d.id}, 'drink')" class="flex-1 py-2 bg-blue-50 text-theme-deep-blue hover:bg-theme-deep-blue hover:text-white rounded-xl transition-colors text-xs font-bold">DETAILS</button>
+                            <button onclick="addToCart(${d.id}, 'drink')" class="w-8 h-8 flex items-center justify-center bg-theme-deep-blue text-white rounded-lg">＋</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
+        renderBreads(); renderDrinks();
 
-        // --- 6. Cart Logic (Supports multiple items) ---
-
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            const existingItem = cart.find(item => item.id === productId);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
+        // --- CART ---
+        function addToCart(id, type) {
+            const list = type === 'bread' ? breadProducts : drinkProducts;
+            const product = list.find(p => p.id === id);
+            const exists = cart.find(i => i.id === id);
+            if (exists) exists.quantity++; else cart.push({...product, quantity: 1});
             updateCartUI();
         }
 
-        function updateCartQuantity(productId, delta) {
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            if (itemIndex > -1) {
-                cart[itemIndex].quantity += delta;
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1);
-                }
-                updateCartUI();
-            }
-        }
-
         function updateCartUI() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            const totalHeader = document.getElementById('cart-total-header');
-            const totalModal = document.getElementById('cart-total-modal');
-            const countBadge = document.getElementById('cart-count-badge');
-
-            let total = 0;
-            let count = 0;
+            const container = document.getElementById('cart-items');
+            const totalH = document.getElementById('cart-total-header');
+            const totalM = document.getElementById('cart-total-modal');
+            const badge = document.getElementById('cart-count-badge');
+            let total = 0, count = 0;
             
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '';
-                cartItemsContainer.appendChild(emptyMsg);
-                emptyMsg.style.display = 'block';
-                countBadge.classList.add('hidden');
+                container.innerHTML = '<div class="text-center opacity-50 mt-10">Warenkorb leer</div>';
+                badge.classList.add('hidden');
             } else {
-                emptyMsg.style.display = 'none';
-                countBadge.classList.remove('hidden');
-                cartItemsContainer.innerHTML = cart.map(item => {
+                badge.classList.remove('hidden');
+                container.innerHTML = cart.map(item => {
                     total += item.price * item.quantity;
                     count += item.quantity;
                     return `
-                        <div class="flex items-center gap-4 bg-theme-white p-4 rounded-2xl border border-theme-pastel-brown shadow-sm">
-                            <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover">
-                            <div class="flex-1">
-                                <h4 class="font-medium text-theme-brown line-clamp-1">${item.name}</h4>
-                                <span class="text-theme-orange font-bold">${formatPrice(item.price)}</span>
-                            </div>
-                            <div class="flex items-center gap-2 bg-theme-pastel-brown/30 rounded-xl px-2 py-1">
-                                <button onclick="updateCartQuantity(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center text-theme-brown font-bold hover:text-theme-orange">-</button>
-                                <span class="w-6 text-center text-theme-brown text-sm font-medium">${item.quantity}</span>
-                                <button onclick="updateCartQuantity(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center text-theme-brown font-bold hover:text-theme-orange">+</button>
+                        <div class="flex items-center gap-4 bg-white p-3 rounded-2xl border">
+                            <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">
+                            <div class="flex-1 text-sm font-medium line-clamp-1">${item.name}</div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeQty(${item.id}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="changeQty(${item.id}, 1)">+</button>
                             </div>
                         </div>
                     `;
                 }).join('');
             }
-
-            const totalStr = formatPrice(total);
-            totalHeader.innerText = totalStr;
-            totalModal.innerText = totalStr;
-            countBadge.innerText = count;
+            totalH.innerText = totalM.innerText = formatPrice(total);
+            badge.innerText = count;
         }
 
-        function checkout() {
-            if (cart.length === 0) return;
-            alert("Vielen Dank für Ihre Bestellung bei Brotal Gut! Diese Simulation endet hier.");
-            cart = [];
+        function changeQty(id, delta) {
+            const idx = cart.findIndex(i => i.id === id);
+            cart[idx].quantity += delta;
+            if (cart[idx].quantity <= 0) cart.splice(idx, 1);
             updateCartUI();
-            closeModal('cart-modal');
         }
 
-        // --- 7. Real-looking Login Logic ---
+        // --- MODALS ---
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function openProductDetails(id, type) {
+            const list = type === 'bread' ? breadProducts : drinkProducts;
+            const p = list.find(x => x.id === id);
+            document.getElementById('feedback-product-id').value = id;
+            
+            let modalContent = `
+                <div class="md:w-1/2 h-64 md:h-auto"><img src="${p.image}" class="w-full h-full object-cover"></div>
+                <div class="md:w-1/2 p-8">
+                    <h2 class="text-3xl font-serif mb-4">${p.name}</h2>
+                    <p class="text-theme-brown/70 mb-4">${p.desc}</p>
+                    
+                    ${type === 'bread' ? `
+                        <div class="mb-6">
+                            <button id="ai-recipe-btn" onclick="generateRecipe('${p.name}')" class="text-sm font-bold text-gemini-purple flex items-center gap-2 hover:underline">
+                                ✨ Rezeptidee mit KI generieren
+                            </button>
+                            <div id="ai-recipe-result"></div>
+                        </div>
+                    ` : ''}
+
+                    <h4 class="font-bold uppercase text-xs tracking-widest mb-2 opacity-50">Inhaltsstoffe</h4>
+                    <ul class="list-disc list-inside text-sm mb-8 opacity-75">
+                        ${p.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                    <button onclick="addToCart(${p.id}, '${type}'); closeModal('product-modal');" class="w-full py-4 ${type === 'bread' ? 'bg-theme-brown' : 'bg-theme-deep-blue'} text-theme-white rounded-xl">In den Warenkorb - ${formatPrice(p.price)}</button>
+                </div>
+            `;
+            
+            document.getElementById('modal-product-content').innerHTML = modalContent;
+            renderReviews(id);
+            openModal('product-modal');
+        }
+
+        function renderReviews(id) {
+            const list = document.getElementById('reviews-list');
+            const items = reviews[id] || [];
+            list.innerHTML = items.length ? items.map(r => `<div class="p-3 border rounded-xl text-sm"><b>${r.name}:</b> ${r.text}</div>`).join('') : '<p class="text-center opacity-50">Keine Bewertungen.</p>';
+        }
+
+        function submitFeedback(e) {
+            e.preventDefault();
+            const id = document.getElementById('feedback-product-id').value;
+            if(!reviews[id]) reviews[id] = [];
+            reviews[id].unshift({name: document.getElementById('feedback-name').value, text: document.getElementById('feedback-text').value});
+            renderReviews(id);
+            e.target.reset();
+        }
+
         function handleLogin(e) {
             e.preventDefault();
-            const emailInput = document.getElementById('login-email');
             const btn = document.getElementById('login-btn');
-            const successMsg = document.getElementById('login-success');
-            
-            btn.innerHTML = `<div class="w-6 h-6 border-2 border-theme-white border-t-transparent rounded-full animate-spin"></div>`;
-            btn.classList.add('opacity-80', 'cursor-not-allowed');
-            
+            btn.innerText = "Moment...";
             setTimeout(() => {
-                // Save user state
-                const userName = emailInput.value.split('@')[0];
-                currentUser = {
-                    name: userName.charAt(0).toUpperCase() + userName.slice(1),
-                    email: emailInput.value
-                };
-
-                // Update UI
+                currentUser = { name: "Brot-Fan" };
                 document.getElementById('login-nav-btn').classList.add('hidden');
                 document.getElementById('user-profile').classList.remove('hidden');
-                document.getElementById('user-display-name').innerText = currentUser.name;
-                document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
-
-                btn.classList.add('hidden');
-                successMsg.classList.remove('hidden');
-                
-                setTimeout(() => {
-                    closeModal('login-modal');
-                    btn.classList.remove('hidden', 'opacity-80', 'cursor-not-allowed');
-                    btn.innerHTML = `<span>Anmelden</span>`;
-                    successMsg.classList.add('hidden');
-                }, 1500);
-            }, 1500);
+                document.getElementById('user-display-name').innerText = "Brot-Fan";
+                document.getElementById('login-success').classList.remove('hidden');
+                setTimeout(() => closeModal('login-modal'), 1000);
+            }, 1000);
         }
+
+        function checkout() { if(cart.length) { alert("Bestellung abgeschlossen!"); cart = []; updateCartUI(); closeModal('cart-modal'); } }
 
     </script>
 </body>
