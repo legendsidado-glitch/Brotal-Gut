@@ -325,8 +325,9 @@
         function formatPrice(p) { return p.toFixed(2).replace('.', ',') + ' €'; }
 
         function initTimer() {
-            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0, 20, 0, 0);
-            const release = tomorrow.getTime();
+            const today = new Date(); 
+            today.setHours(12, 45, 0, 0); 
+            const release = today.getTime();
             setInterval(() => {
                 const dist = release - Date.now();
                 if (dist < 0) return;
