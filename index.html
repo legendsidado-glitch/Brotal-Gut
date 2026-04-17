@@ -279,15 +279,26 @@
         <div class="modal-content bg-theme-white w-full max-w-md rounded-3xl p-8 relative">
             <button onclick="closeModal('profile-modal')" class="absolute top-4 right-4 text-theme-brown hover:text-theme-orange transition-colors w-10 h-10 flex items-center justify-center rounded-full text-2xl z-10">✕</button>
             <h2 class="text-2xl font-serif mb-6 text-center text-theme-brown">Profil anpassen</h2>
+            
             <form onsubmit="saveProfile(event)">
-                <div class="mb-4">
+                <div class="mb-6 flex flex-col items-center">
+                    <label class="block text-sm text-theme-brown/70 mb-3 text-center w-full">Profilbild (Klick zum Ändern)</label>
+                    
+                    <div id="modal-avatar-preview" onclick="document.getElementById('profile-file-input').click()" class="w-28 h-28 rounded-full bg-theme-pastel-brown/30 flex items-center justify-center text-theme-brown font-bold cursor-pointer transition-all overflow-hidden border-2 border-dashed border-theme-brown/50 relative group">
+                        <span id="modal-avatar-text" class="text-4xl text-theme-brown/50">?</span>
+                        <div class="absolute inset-0 bg-theme-brown/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-8 h-8 text-theme-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="profile-file-input" accept="image/*" class="hidden" onchange="previewImage(event)">
+                </div>
+
+                <div class="mb-8">
                     <label class="block text-sm text-theme-brown/70 mb-2 px-2">Dein Anzeigename</label>
                     <input type="text" id="profile-name-input" required class="w-full p-4 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="Neuer Name">
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm text-theme-brown/70 mb-2 px-2">Profilbild (Bild-URL / Optional)</label>
-                    <input type="url" id="profile-image-input" class="w-full p-4 rounded-xl bg-theme-pastel-brown/20 border-none text-theme-brown focus:ring-2 focus:ring-theme-orange outline-none" placeholder="https://beispiel.de/bild.jpg">
-                </div>
+                
                 <button type="submit" class="w-full py-4 bg-theme-orange text-theme-white rounded-xl font-medium hover:bg-theme-brown transition-colors shadow-lg hover:-translate-y-1">Speichern</button>
             </form>
         </div>
@@ -511,35 +522,74 @@
             }, 1000);
         }
 
+        // --- PROFIL LOGIK ---
+        let tempImageBase64 = null; // Speichert das hochgeladene Bild temporär
+
+        // Funktion: Wenn ein Bild ausgewählt wird, lade es und zeige es im Kreis an
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader(); // Liest die Datei vom Gerät
+                reader.onload = function(e) {
+                    tempImageBase64 = e.target.result; // Wandelt Bild in Text-Code um
+                    
+                    // Aktualisiere das kleine Vorschaubild im Modal
+                    const previewEl = document.getElementById('modal-avatar-preview');
+                    previewEl.innerHTML = `
+                        <img src="${tempImageBase64}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-theme-brown/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-8 h-8 text-theme-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                    `;
+                    previewEl.classList.remove('border-dashed'); // Entfernt die gestrichelte Linie
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Funktion: Speichere den Namen und das ausgewählte Bild
         function saveProfile(e) {
-            e.preventDefault(); // Verhindert das Neuladen der Seite
+            e.preventDefault();
             
             const newName = document.getElementById('profile-name-input').value;
-            const newImage = document.getElementById('profile-image-input').value;
 
-            // Update Name
+            // Namen in Navbar updaten
             currentUser.name = newName;
             document.getElementById('user-display-name').innerText = newName;
 
-            // Update Avatar (Bild oder Anfangsbuchstabe)
+            // Bild in Navbar updaten
             const avatarEl = document.getElementById('user-avatar');
-            if (newImage) {
-                // Wenn eine URL eingegeben wurde, zeige das Bild
-                avatarEl.innerHTML = `<img src="${newImage}" class="w-full h-full object-cover">`;
-                avatarEl.classList.remove('bg-theme-brown', 'text-theme-white'); // Entfernt die Hintergrundfarbe
+            if (tempImageBase64) currentUser.image = tempImageBase64; // Neues Bild ins Profil übernehmen
+
+            if (currentUser.image) {
+                // Wenn ein Bild existiert
+                avatarEl.innerHTML = `<img src="${currentUser.image}" class="w-full h-full object-cover">`;
+                avatarEl.classList.remove('bg-theme-brown', 'text-theme-white');
             } else {
-                // Wenn kein Bild da ist, nimm den ersten Buchstaben des neuen Namens
+                // Wenn noch kein Bild da ist, nutze den Anfangsbuchstaben
                 avatarEl.innerHTML = newName.charAt(0).toUpperCase();
-                avatarEl.classList.add('bg-theme-brown', 'text-theme-white'); // Setzt Hintergrundfarbe zurück
+                avatarEl.classList.add('bg-theme-brown', 'text-theme-white');
             }
 
             closeModal('profile-modal');
         }
 
-        // Optional: Wenn das Modal geöffnet wird, lade die aktuellen Daten in die Inputs
+        // Wenn das Modal geöffnet wird, lade die aktuellen Daten rein
         document.getElementById('user-profile').addEventListener('click', () => {
             if (currentUser) {
                 document.getElementById('profile-name-input').value = currentUser.name;
+                tempImageBase64 = currentUser.image || null; // Reset
+                
+                const previewEl = document.getElementById('modal-avatar-preview');
+                const hoverIcon = `<div class="absolute inset-0 bg-theme-brown/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><svg class="w-8 h-8 text-theme-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>`;
+
+                if (currentUser.image) {
+                    previewEl.innerHTML = `<img src="${currentUser.image}" class="w-full h-full object-cover">` + hoverIcon;
+                    previewEl.classList.remove('border-dashed');
+                } else {
+                    previewEl.innerHTML = `<span id="modal-avatar-text" class="text-4xl text-theme-brown/50">${currentUser.name.charAt(0).toUpperCase()}</span>` + hoverIcon;
+                    previewEl.classList.add('border-dashed');
+                }
             }
         });
         
