@@ -282,12 +282,12 @@
             { id: 1, name: "Klassisches Sauerteigbrot", price: 6.50, image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=800&q=80", desc: "100% Natursauerteig, kräftige Kruste.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Sauerteig", "Meersalz"] },
             { id: 2, name: "Roggen Sauerteigbrot", price: 6.90, image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80", desc: "Dunkel, malzig, extrem saftig.", ingredients: ["Roggenvollkornmehl", "Wasser", "Roggensauerteig", "Rübensirup", "Salz"] },
             { id: 3, name: "Dinkel Sauerteigbrot", price: 7.20, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8969.png?auto=format&fit=fill&w=640", desc: "Nussig und gut bekömmlich.", ingredients: ["Dinkelmehl Typ 630", "Dinkelvollkornmehl", "Dinkelsauerteig", "Salz", "Wasser"] },
-            { id: 4, name: "Vollkornbrot", price: 5.80, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", desc: "Vollgepackt mit Ballaststoffen.", ingredients: ["Weizenvollkorn", "Roggenvollkorn", "Sonnenblumenkerne", "Hefe", "Salz"] },
-            { id: 5, name: "Mehrkornbrot", price: 6.20, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8970.png?auto=format&fit=fill&w=640", desc: "Mit Sonnenblumenkernen und Sesam.", ingredients: ["Weizen", "Roggen", "Haferflocken", "Leinsamen", "Sesam", "Kürbiskerne"] },
+            { id: 4, name: "Vollkornbrot", price: 5.80, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80", desc: "Vollgepackt mit Ballaststoffen.", ingredients: ["Weizenvollkorn", "Roggenvollkorn", "Sonnenblumenkerne", "Hefe", "Salz", "Sauerteig"] },
+            { id: 5, name: "Mehrkornbrot", price: 6.20, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8970.png?auto=format&fit=fill&w=640", desc: "Mit Sonnenblumenkernen und Sesam.", ingredients: ["Weizen", "Roggensauerteig", "Haferflocken", "Leinsamen", "Sesam", "Kürbiskerne"] },
             { id: 6, name: "Bauernbrot", price: 5.50, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8971.png?auto=format&fit=fill&w=640", desc: "Der herzhafte Klassiker.", ingredients: ["Weizenmehl", "Roggenmehl", "Wasser", "Hefe", "Natursauerteig", "Salz"] },
-            { id: 7, name: "Olivenbrot", price: 7.50, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8972.png?auto=format&fit=fill&w=640", desc: "Mit aromatischen Kalamata-Oliven.", ingredients: ["Weizenmehl", "Kalamata Oliven", "Olivenöl", "Oregano", "Meersalz", "Hefe"] },
+            { id: 7, name: "Olivenbrot", price: 7.50, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8972.png?auto=format&fit=fill&w=640", desc: "Mit aromatischen Kalamata-Oliven.", ingredients: ["Weizensauerteig", "Kalamata Oliven", "Olivenöl", "Oregano", "Meersalz", "Hefe"] },
             { id: 8, name: "Baguette (Sauerteig)", price: 3.90, image: "https://images.unsplash.com/photo-1597079910443-60c43fc4f729?auto=format&fit=crop&w=800&q=80", desc: "Französisches Flair mit Sauerteig-Touch.", ingredients: ["Weizenmehl Typ 550", "Weizensauerteig", "Wasser", "Hefe", "Salz"] },
-            { id: 9, name: "Ciabatta", price: 4.20, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8973.png?auto=format&fit=fill&w=640", desc: "Luftig, leicht, mediterran.", ingredients: ["Weizenmehl", "Extra Vergine Olivenöl", "Viel Wasser", "Hefe", "Salz"] }
+            { id: 9, name: "Ciabatta", price: 4.20, image: "https://69e0f8d9f8ae33c8389e6669.imgix.net/IMG_8973.png?auto=format&fit=fill&w=640", desc: "Luftig, leicht, mediterran.", ingredients: ["Weizenmehl", "Extra Vergine Olivenöl", "Viel Wasser", "Hefe", "Salz", "Natursauerteig"] }
         ];
 
         const drinkProducts = [
@@ -325,7 +325,7 @@
         function formatPrice(p) { return p.toFixed(2).replace('.', ',') + ' €'; }
 
         function initTimer() {
-            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(3, 45, 0, 0);
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(1, 45, 0, 0);
             const release = tomorrow.getTime();
             setInterval(() => {
                 const dist = release - Date.now();
